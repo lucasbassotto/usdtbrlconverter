@@ -50,10 +50,10 @@ export default function App() {
       <h1 className="text-2xl font-bold mb-2">Conversor USDT/BRL</h1>
 
       <div className="mb-2 text-center">
-        <p className="text-lg">USD/BRL: {usdbrl?.toFixed(4) ?? "..."}</p>
-        <p className="text-lg">USDT/USD: {usdtusd?.toFixed(4) ?? "..."}</p>
+        <p className="text-lg">USD/BRL (Spot): {usdbrl?.toFixed(4) ?? "..."}</p>
+        <p className="text-lg">USDT/USD (Kraken): {usdtusd?.toFixed(4) ?? "..."}</p>
         <p className="text-xl font-semibold">
-          USDT/BRL: {usdtbrl?.toFixed(4) ?? "..."}
+          USDT/BRL (Spot): {usdtbrl?.toFixed(4) ?? "..."}
         </p>
       </div>
 
