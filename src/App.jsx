@@ -10,6 +10,7 @@ export default function App() {
   const [isInverted, setIsInverted] = useState(false);
   const [inputValue, setInputValue] = useState(1);
   const [lastUpdate, setLastUpdate] = useState(null);
+  const [fee, setFee] = useState(0); // Fee em porcentagem
 
   useEffect(() => {
     const ws = new WebSocket(WS_URL);
@@ -35,6 +36,8 @@ export default function App() {
   }, []);
 
   const usdtbrl = usdbrl && usdtusd ? usdbrl * usdtusd : null;
+  const usdtbrlAdjusted = usdtbrl ? usdtbrl * (1 + fee / 100) : null;
+
   const result = usdtbrl
     ? isInverted
       ? inputValue / usdtbrl
@@ -43,22 +46,32 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <img src="/noxpay-logo.webp" alt="NoxPay Logo" className="w-40 mb-4" />
+      <img src="/noxpay.webp" alt="NoxPay Logo" className="w-40 mb-4" />
       <h1 className="text-2xl font-bold mb-2">Conversor USDT/BRL</h1>
 
       <div className="mb-2 text-center">
         <p className="text-lg">USD/BRL: {usdbrl?.toFixed(4) ?? "..."}</p>
         <p className="text-lg">USDT/USD: {usdtusd?.toFixed(4) ?? "..."}</p>
-        <p className="text-xl font-semibold">USDT/BRL: {usdtbrl?.toFixed(4) ?? "..."}</p>
+        <p className="text-xl font-semibold">
+          USDT/BRL: {usdtbrl?.toFixed(4) ?? "..."}
+        </p>
+        {usdtbrlAdjusted && (
+          <p className="text-md text-gray-800 mt-1">
+            USDT/BRL com fee:{" "}
+            <strong>{usdtbrlAdjusted.toFixed(4)}</strong>
+          </p>
+        )}
       </div>
 
       {lastUpdate && (
         <p className="text-sm text-gray-600 mt-1">
-          Última atualização: {lastUpdate.toLocaleDateString()} {lastUpdate.toLocaleTimeString()}
+          Última atualização:{" "}
+          {lastUpdate.toLocaleDateString()}{" "}
+          {lastUpdate.toLocaleTimeString()}
         </p>
       )}
 
-      <div className="flex items-center gap-2 mt-4 mb-4">
+      <div className="flex items-center gap-2 mt-4 mb-2">
         <input
           type="number"
           className="border p-2 rounded w-32 text-center"
@@ -81,6 +94,17 @@ export default function App() {
             : `${result.toFixed(2)} BRL`}
         </div>
       )}
+
+      <div className="flex items-center gap-2 mt-4">
+        <input
+          type="number"
+          className="border p-2 rounded w-24 text-center"
+          value={fee}
+          step="0.1"
+          onChange={(e) => setFee(Number(e.target.value))}
+        />
+        <span className="font-semibold">Fee (%)</span>
+      </div>
     </div>
   );
 }
