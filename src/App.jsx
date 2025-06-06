@@ -38,10 +38,10 @@ export default function App() {
   const usdtbrl = usdbrl && usdtusd ? usdbrl * usdtusd : null;
   const usdtbrlAdjusted = usdtbrl ? usdtbrl * (1 + fee / 100) : null;
 
-  const result = usdtbrl
+  const result = usdtbrlAdjusted
     ? isInverted
-      ? inputValue / usdtbrl
-      : inputValue * usdtbrl
+      ? inputValue / usdtbrlAdjusted
+      : inputValue * usdtbrlAdjusted
     : null;
 
   return (
