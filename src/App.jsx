@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const SYMBOLS = "USD/BRL,USDT/USD";
-const WS_URL = `wss://ws.twelvedata.com/v1/price?apikey=${API_KEY}`;
+const WS_URL = `wss://ws.twelvedata.com/v1/quotes/price?apikey=${API_KEY}`;
 
 export default function App() {
   const [usdbrl, setUsdbrl] = useState(null);
   const [usdtusd, setUsdtusd] = useState(null);
   const [isInverted, setIsInverted] = useState(false);
   const [inputValue, setInputValue] = useState(1);
+  const [lastUpdate, setLastUpdate] = useState(null);
 
   useEffect(() => {
     const ws = new WebSocket(WS_URL);
@@ -16,9 +17,7 @@ export default function App() {
       ws.send(
         JSON.stringify({
           action: "subscribe",
-          params: {
-            symbols: SYMBOLS,
-          },
+          params: { symbols: SYMBOLS },
         })
       );
     };
@@ -28,6 +27,7 @@ export default function App() {
       if (data.event === "price") {
         if (data.symbol === "USD/BRL") setUsdbrl(parseFloat(data.price));
         if (data.symbol === "USDT/USD") setUsdtusd(parseFloat(data.price));
+        setLastUpdate(new Date());
       }
     };
 
@@ -43,15 +43,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-bold mb-4">Conversor USDT/BRL</h1>
+      <img src="/noxpay-logo.png" alt="NoxPay Logo" className="w-40 mb-4" />
+      <h1 className="text-2xl font-bold mb-2">Conversor USDT/BRL</h1>
 
-      <div className="mb-4 text-center">
+      <div className="mb-2 text-center">
         <p className="text-lg">USD/BRL: {usdbrl?.toFixed(4) ?? "..."}</p>
         <p className="text-lg">USDT/USD: {usdtusd?.toFixed(4) ?? "..."}</p>
         <p className="text-xl font-semibold">USDT/BRL: {usdtbrl?.toFixed(4) ?? "..."}</p>
       </div>
 
-      <div className="flex items-center gap-2 mb-4">
+      {lastUpdate && (
+        <p className="text-sm text-gray-600 mt-1">
+          Última atualização: {lastUpdate.toLocaleDateString()} {lastUpdate.toLocaleTimeString()}
+        </p>
+      )}
+
+      <div className="flex items-center gap-2 mt-4 mb-4">
         <input
           type="number"
           className="border p-2 rounded w-32 text-center"
