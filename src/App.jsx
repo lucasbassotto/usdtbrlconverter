@@ -55,23 +55,37 @@ export default function App() {
         <p className="text-xl font-semibold">
           USDT/BRL: {usdtbrl?.toFixed(4) ?? "..."}
         </p>
-        {usdtbrlAdjusted && (
-          <p className="text-md text-gray-800 mt-1">
-            USDT/BRL com fee:{" "}
-            <strong>{usdtbrlAdjusted.toFixed(4)}</strong>
-          </p>
-        )}
       </div>
 
       {lastUpdate && (
         <p className="text-sm text-gray-600 mt-1">
           Última atualização:{" "}
-          {lastUpdate.toLocaleDateString()}{" "}
-          {lastUpdate.toLocaleTimeString()}
+          {lastUpdate.toLocaleDateString()} {lastUpdate.toLocaleTimeString()}
         </p>
       )}
 
-      <div className="flex items-center gap-2 mt-4 mb-2">
+      {/* FEE INPUT + COTAÇÃO AJUSTADA */}
+      {usdtbrlAdjusted && (
+        <div className="text-center mt-4 mb-2">
+          <div className="flex justify-center items-center gap-2 mb-1">
+            <input
+              type="number"
+              className="border p-2 rounded w-24 text-center"
+              value={fee}
+              step="0.1"
+              onChange={(e) => setFee(Number(e.target.value))}
+            />
+            <span className="font-semibold">Fee (%)</span>
+          </div>
+          <p className="text-md text-gray-800">
+            USDT/BRL com fee:{" "}
+            <strong>{usdtbrlAdjusted.toFixed(4)}</strong>
+          </p>
+        </div>
+      )}
+
+      {/* INPUT + ↔ + RESULTADO */}
+      <div className="flex items-center gap-2 mt-4 mb-4">
         <input
           type="number"
           className="border p-2 rounded w-32 text-center"
@@ -85,25 +99,13 @@ export default function App() {
         >
           ↔
         </button>
-      </div>
-
-      {result !== null && (
-        <div className="text-lg font-medium">
-          {isInverted
-            ? `${result.toFixed(4)} USDT`
-            : `${result.toFixed(2)} BRL`}
-        </div>
-      )}
-
-      <div className="flex items-center gap-2 mt-4">
-        <input
-          type="number"
-          className="border p-2 rounded w-24 text-center"
-          value={fee}
-          step="0.1"
-          onChange={(e) => setFee(Number(e.target.value))}
-        />
-        <span className="font-semibold">Fee (%)</span>
+        {result !== null && (
+          <div className="text-lg font-medium ml-2">
+            {isInverted
+              ? `${result.toFixed(4)} USDT`
+              : `${result.toFixed(2)} BRL`}
+          </div>
+        )}
       </div>
     </div>
   );
