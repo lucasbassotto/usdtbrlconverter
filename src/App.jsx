@@ -43,7 +43,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <img src="/noxpay-logo.png" alt="NoxPay Logo" className="w-40 mb-4" />
+      <img src="/noxpay-logo.webp" alt="NoxPay Logo" className="w-40 mb-4" />
       <h1 className="text-2xl font-bold mb-2">Conversor USDT/BRL</h1>
 
       <div className="mb-2 text-center">
